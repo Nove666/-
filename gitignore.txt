@@ -1,0 +1,5 @@
+vector_db/
+lingshu_an.db
+.idea/
+__pycache__/
+*.pyc

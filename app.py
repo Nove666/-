@@ -112,12 +112,10 @@ db_manager = DatabaseManager()
 
 
 # ==================== 向量存储部分 ====================
-class VectorStore:
-    def __init__(self):
-        self.persist_path = os.path.join(os.path.dirname(__file__), 'vector_db')
-        os.makedirs(self.persist_path, exist_ok=True)
-        self.model = None
-        self._load_model()
+def _load_model(self):
+    self.model = None
+    print("⚠ 向量模型已禁用（镜像大小优化）")
+    return
 
     def _load_model(self):
         try:

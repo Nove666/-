@@ -888,32 +888,32 @@ def get_articles():
         })
 
 
-# ==================== 启动 ====================
+# ==================== 初始化（Gunicorn 启动时执行）====================
+print("=" * 50)
+print("🌿 灵枢安智能体启动中...")
+print("=" * 50)
+
+# 初始化数据库
+print("📦 初始化数据库...")
+
+# 向量模型已禁用（Railway 内存不足）
+print("⚠ 向量模型已禁用（部署模式）")
+
+# 检查数据并自动爬取
+print("🕷️ 检查数据...")
+with db_manager.get_session() as session:
+    from sqlalchemy import func
+    count = session.query(HealthArticle).count()
+    if count == 0:
+        print("📡 首次运行，自动爬取数据...")
+        crawler = HealthCrawler()
+        crawler.run('all')
+
+print("=" * 50)
+print("🚀 服务已启动")
+print("=" * 50)
+
+# ==================== 启动入口 ====================
 if __name__ == '__main__':
-    print("=" * 50)
-    print("🌿 灵枢安智能体启动中...")
-    print("=" * 50)
-
-    # 初始化数据库
-    print("📦 初始化数据库...")
-    # 数据库已在 DatabaseManager 中初始化
-
-    # 初始化向量知识库
-    print("🔍 初始化向量知识库...")
-    init_vector_knowledge()
-
-    # 可选：自动运行一次爬虫获取数据
-    print("🕷️ 检查数据...")
-    with db_manager.get_session() as session:
-        count = session.query(HealthArticle).count()
-        if count == 0:
-            print("📡 首次运行，自动爬取数据...")
-            crawler = HealthCrawler()
-            crawler.run('all')
-            init_vector_knowledge()
-
-    print("=" * 50)
-    print("🚀 服务已启动，访问 http://localhost:5000")
-    print("=" * 50)
-
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)

@@ -19,11 +19,13 @@ except:
 class DatabaseManager:
     """数据库管理器"""
 
-    def __init__(self, db_url: str = None):
-        self.db_url = db_url or self._get_default_url()
-        self.engine = None
-        self.Session = None
-        self._init_engine()
+   def __init__(self):
+    import tempfile
+    temp_dir = tempfile.gettempdir()
+    db_path = os.path.join(temp_dir, 'lingshu_an.db')
+    self.engine = create_engine(f'sqlite:///{db_path}', connect_args={'check_same_thread': False})
+    self.Session = scoped_session(sessionmaker(bind=self.engine))
+    self._create_tables()
 
     def _get_default_url(self) -> str:
         """获取默认数据库URL"""
